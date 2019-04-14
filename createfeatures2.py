@@ -16,6 +16,7 @@ ALPHABET = list(string.ascii_uppercase)
 CHARS_LABELS_MAP = {k: v for k, v in enumerate(ALPHABET)}
 
 CSV_FILE_PATH = 'data.csv'
+CLASS_NO = 1000  # number of instances of one class
 
 
 def get_imgarray_from_csv_file_row(row_arg):
@@ -40,17 +41,31 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
     with open(CSV_FILE_PATH, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
 
+        label = ALPHABET[0]
+        counter = 1
+
         for row in reader:
-            label = CHARS_LABELS_MAP[int(row.pop(0))]
-            img = get_imgarray_from_csv_file_row(row)
 
-            feature_descriptor = feature_descriptor_ref()
-            feature_descriptor.preprocess(img)
-            feature_descriptor.describe()
-            feature_vector = feature_descriptor.get_feature_vector()
-            feature_vector.append(label)
+            new_label = CHARS_LABELS_MAP[int(row.pop(0))]
 
-            feature_vectors.append(feature_vector)
+            if new_label is label:
+                if counter > CLASS_NO:
+                    continue
+                else:
+                    img = get_imgarray_from_csv_file_row(row)
+
+                    feature_descriptor = feature_descriptor_ref()
+                    feature_descriptor.preprocess(img)
+                    feature_descriptor.describe()
+                    feature_vector = feature_descriptor.get_feature_vector()
+                    feature_vector.append(label)
+
+                    feature_vectors.append(feature_vector)
+
+                    counter += 1
+            else:
+                label = new_label
+                counter = 1
 
         # creating data frame and saving as .csv
         column_names = ['f#' + str(col_name) for col_name in range(len(feature_vector[:-1]))]
@@ -64,6 +79,3 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
 
         end = time()
         print("Creating features using " + feature_descriptor_name + " occupied: ", end - start)
-
-
-

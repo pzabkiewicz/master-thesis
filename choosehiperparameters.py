@@ -50,10 +50,10 @@ y = df.values[:, -1]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 for classifier_name in CLASSIFIER_OPTIONS:
-    classifier = classifier_name['estimator']
+    classifier = CLASSIFIER_OPTIONS[classifier_name]['estimator']
 
     gs = GridSearchCV(estimator=classifier,
-                      param_grid=classifier_name['parameters'],
+                      param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
                       scoring='accuracy',
                       cv=10,
                       n_jobs=-1)
