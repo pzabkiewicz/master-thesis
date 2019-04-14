@@ -70,7 +70,7 @@ class LocalBinaryPattern(FeatureDescriptor):
         self.feature_vector = hist
 
     def get_feature_vector(self):
-        return self.feature_vector
+        return self.feature_vector.tolist()
 
 
 class Zoning(FeatureDescriptor):
@@ -149,7 +149,7 @@ class EdgeMaps(FeatureDescriptor):
     ANGLE = 45
 
     def __init__(self, zone_number=16):
-        super.__init__()
+        super().__init__()
         self.side_zone_number = int(sqrt(zone_number))
 
     def preprocess(self, image):
@@ -191,7 +191,7 @@ class EdgeMaps(FeatureDescriptor):
 
     @staticmethod
     def _get_char_pixels_percentage(zone, zone_side_size):
-        return np.sum(zone == CHAR_PIXEL_VALUE) / zone_side_size * 100
+        return np.sum(zone == CHAR_PIXEL_VALUE) / (zone_side_size ** 2) * 100
 
     @staticmethod
     def _binarize_projection(projection):
@@ -237,13 +237,13 @@ class ZoningChainCode(FeatureDescriptor):
     # to vector features precisely. We have here 4 directions (specified by straights
     # without 'arrowhead') and 2x4 = 8 senses.
     # In other cases DIRECTION is used generally as these 8 senses in the code.
-    SENSE2DIR = {0: 0, 1: 1, 5: 1, 4: 0, 2: 2, 6: 2, 3: 3, 7: 3, NO_CHAIN_CODE: 4}
+    SENSE2DIR = {0: 3, 1: 1, 5: 1, 4: 3, 2: 2, 6: 2, 3: 0, 7: 0, NO_CHAIN_CODE: 4}
 
     def __init__(self, zone_number=16):
         super().__init__()
         self.side_zone_number = int(sqrt(zone_number))
-        self.zone_boundary_map = self._create_zone_boundary_map()
         self.zone_chain_codes = self._create_chain_code_containers()
+        self.zone_boundary_map = None
         self.current_point = None
 
     def preprocess(self, image):
@@ -252,6 +252,7 @@ class ZoningChainCode(FeatureDescriptor):
 
         # add additional background pixels
         self.image = np.pad(self.image, self.PAD_WIDTH, mode='constant')
+        self.zone_boundary_map = self._create_zone_boundary_map()
 
     def describe(self):
         start_px = self._find_start_point()
@@ -269,7 +270,7 @@ class ZoningChainCode(FeatureDescriptor):
             directions.extend(range(start_direction, 8))
             directions.extend(range(0, start_direction))
 
-            self._find_chain_code(directions, self.current_point)
+            last_direction = self._find_chain_code(directions, self.current_point)
 
             if count >= self.ITER_MAX:
                 break
@@ -285,7 +286,7 @@ class ZoningChainCode(FeatureDescriptor):
     def _create_zone_boundary_map(self):
         side_size = int((self.image.shape[0] - 2 * self.PAD_WIDTH) // self.side_zone_number)
         total_zone_number = self.side_zone_number ** 2
-        keys = ['z' + i for i in range(total_zone_number)]
+        keys = ['z' + str(i) for i in range(total_zone_number)]
         values = []
 
         for i in range(self.side_zone_number):
@@ -302,7 +303,7 @@ class ZoningChainCode(FeatureDescriptor):
         written chain codes of char being in zone. """
 
         zone_number = self.side_zone_number ** 2
-        return dict(zip(['z' + str(i) for i in range(zone_number)], [list() in range(zone_number)]))
+        return dict(zip(['z' + str(i) for i in range(zone_number)], [list() for _ in range(zone_number)]))
 
     def _get_zone_based_on_coords(self, coords):
         y = coords[0]  # row
@@ -329,7 +330,7 @@ class ZoningChainCode(FeatureDescriptor):
         self.current_point = prev_point
 
         for direction in directions:
-            idx = self.DIR2IDX(direction)
+            idx = self.DIR2IDX[direction]
             new_point = (self.current_point[0] + self.Y_MOVE[idx], self.current_point[1] + self.X_MOVE[idx])
 
             if self.image[new_point] == CHAR_PIXEL_VALUE:
@@ -345,9 +346,15 @@ class ZoningChainCode(FeatureDescriptor):
 
         for zone_chain_code in self.zone_chain_codes.values():
             # convert senses to directions
-            zone_dir_chain_code = \
-                [self.SENSE2DIR[code] if len(zone_chain_code) > 0 else
-                 self.SENSE2DIR[self.NO_CHAIN_CODE] for code in zone_chain_code]
+
+            if not zone_chain_code:
+                zone_dir_chain_code = [self.SENSE2DIR[self.NO_CHAIN_CODE]]
+            else:
+                zone_dir_chain_code = [self.SENSE2DIR[code] for code in zone_chain_code]
+
+            if len(zone_dir_chain_code) == 1:
+                features.append(zone_dir_chain_code[0])
+                continue
 
             # find the most frequent or random from most frequents
             values, counts = np.unique(zone_dir_chain_code, return_counts=True)
@@ -357,7 +364,7 @@ class ZoningChainCode(FeatureDescriptor):
             unique_keys = []
 
             for key in unique_map:
-                if unique_map == maxi:
+                if unique_map[key] == maxi:
                     unique_keys.append(key)
 
             feature_from_zone = unique_keys[int(random() * len(unique_keys))]

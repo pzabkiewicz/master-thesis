@@ -28,6 +28,10 @@ def get_imgarray_from_csv_file_row(row_arg):
 
 # for every descriptor create file with features from every image
 for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
+
+    if not FEATURE_EXTRACTION_OPTIONS[feature_descriptor_name]['enabled']:
+        continue
+
     feature_descriptor_ref = FEATURE_EXTRACTION_OPTIONS[feature_descriptor_name]['descriptor']
 
     feature_vectors = []
@@ -59,7 +63,7 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
         df.to_csv(target_features_filename)
 
         end = time()
-        print("Creating features using " + feature_descriptor_name + "occupied: ", start - end)
+        print("Creating features using " + feature_descriptor_name + " occupied: ", end - start)
 
 
 
