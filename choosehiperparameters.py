@@ -9,19 +9,20 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
 
-PARAM_RANGE = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
+
 CLASSIFIER_OPTIONS = {
     'svm': {
         'estimator': SVC(random_state=42),
         'parameters': [
             {
                 'kernel': ['linear'],
-                'C': PARAM_RANGE,
+                'C': PARAM_RANGE_SVM_KNN,
             },
             {
                 'kernel': ['rbf'],
-                'C': PARAM_RANGE,
-                'gamma': PARAM_RANGE
+                'C': PARAM_RANGE_SVM_KNN,
+                'gamma': PARAM_RANGE_SVM_KNN
             }
         ]
     },
@@ -35,7 +36,11 @@ CLASSIFIER_OPTIONS = {
     },
     'mlp': {
         'estimator': MLPClassifier(random_state=42),
-        'parameters': None
+        'parameters':
+            {
+                 'hidden_layer_sizes': [(i*50,) for i in range(1,11)],
+                 'activation': ['logistic', 'tanh', 'relu']
+            }
     }
 }
 
