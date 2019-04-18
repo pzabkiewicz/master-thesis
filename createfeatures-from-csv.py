@@ -16,7 +16,9 @@ ALPHABET = list(string.ascii_uppercase)
 CHARS_LABELS_MAP = {k: v for k, v in enumerate(ALPHABET)}
 
 CSV_FILE_PATH = 'data.csv'
-CLASS_NO = 1000  # number of instances of one class
+
+# number of instances of one class for feature extraction
+CLASS_NO = 1000
 
 
 def get_imgarray_from_csv_file_row(row_arg):

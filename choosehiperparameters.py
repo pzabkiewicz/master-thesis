@@ -1,5 +1,7 @@
 import pandas as pd
 
+from time import time
+
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -24,15 +26,17 @@ CLASSIFIER_OPTIONS = {
                 'C': PARAM_RANGE_SVM_KNN,
                 'gamma': PARAM_RANGE_SVM_KNN
             }
-        ]
+        ],
+        'enabled': True
     },
     'knn': {
-        'estimator': KNeighborsClassifier(random_state=42),
+        'estimator': KNeighborsClassifier(),
         'parameters':
             {
                 'n_neighbors': [3, 4, 5],
                 'metric': ['euclidean', 'manhattan', 'chebyshev'],
-            }
+            },
+        'enabled': False
     },
     'mlp': {
         'estimator': MLPClassifier(random_state=42),
@@ -40,7 +44,8 @@ CLASSIFIER_OPTIONS = {
             {
                  'hidden_layer_sizes': [(i*50,) for i in range(1,11)],
                  'activation': ['logistic', 'tanh', 'relu']
-            }
+            },
+        'enabled': False
     }
 }
 
@@ -55,7 +60,13 @@ y = df.values[:, -1]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 for classifier_name in CLASSIFIER_OPTIONS:
+
+    if not CLASSIFIER_OPTIONS[classifier_name]['enabled']:
+        continue
+
     classifier = CLASSIFIER_OPTIONS[classifier_name]['estimator']
+
+    start = time()
 
     gs = GridSearchCV(estimator=classifier,
                       param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
@@ -65,6 +76,9 @@ for classifier_name in CLASSIFIER_OPTIONS:
 
     gs = gs.fit(X_train, y_train)
 
+    end = time()
+
     print(5 * '#' + classifier_name.upper() + 5 * '#', end='\n')
     print('Sredni wynik z 10-krotnej walidacji krzyzowej: ', gs.best_score_)
-    print('Parametry najelepszego klasyfikatora: ', gs.best_params_, end='\n')
+    print('Parametry najlepszego klasyfikatora: ', gs.best_params_, end='\n')
+    print('GridSearch occupied: ', end - start, end='\n')

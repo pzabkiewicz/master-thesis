@@ -10,7 +10,7 @@ FEATURE_EXTRACTION_OPTIONS = {
     'zoning': {
         'descriptor': Zoning,
         'target_features_filename': 'zoning_features.csv',
-        'enabled': False
+        'enabled': True
     },
         'edge_maps': {
         'descriptor': EdgeMaps,
