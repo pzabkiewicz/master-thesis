@@ -25,7 +25,6 @@ def get_imgarray_from_csv_file_row(row_arg):
     img_array = np.asarray(row_arg)
     img_array = img_array.reshape(28, 28)
     img_array = img_array.astype('uint8')
-    img_array = resize(img_array, (20, 20))
     return img_array
 
 

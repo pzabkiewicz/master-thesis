@@ -31,7 +31,6 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
     for filepath in filepaths:
         label = filepath.split('/')[1]  # name of char
         img = imread(filepath)
-        img = resize(img, (20, 20))
 
         feature_descriptor = feature_descriptor_ref()
         feature_descriptor.preprocess(img)

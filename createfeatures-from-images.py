@@ -58,7 +58,6 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
         label = char_file_path[0]
 
         img = imread(BASE_IMAGES_DIRECTORY + char_file_path)
-        img = resize(img, (20, 20))
 
         feature_descriptor = feature_descriptor_ref()
         feature_descriptor.preprocess(img)
