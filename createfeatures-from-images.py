@@ -5,7 +5,6 @@ from time import time
 
 import pandas as pd
 from skimage.io import imread
-from skimage.transform import resize
 
 from constants import BASE_IMAGES_DIRECTORY
 from constants import BASE_TARGET_FEATURES_DIRECTORY
@@ -20,7 +19,7 @@ CSV_FILE_PATH = 'data.csv'
 CHAR_DIRECTORIES = listdir(BASE_IMAGES_DIRECTORY)
 
 # number of instances of one class for feature extraction
-CLASS_NO = 500
+CLASS_NO = 2000
 
 chosen_char_file_paths = []
 
@@ -40,6 +39,8 @@ for char_directory in CHAR_DIRECTORIES:
 
         counter += 1
 
+    print('%d images of char %s will be processed.' % (counter, char_directory))
+
 
 # for every descriptor create file with features from every image
 for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
@@ -58,7 +59,6 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
         label = char_file_path[0]
 
         img = imread(BASE_IMAGES_DIRECTORY + char_file_path)
-        img = resize(img, (20, 20))
 
         feature_descriptor = feature_descriptor_ref()
         feature_descriptor.preprocess(img)
@@ -67,7 +67,6 @@ for feature_descriptor_name in FEATURE_EXTRACTION_OPTIONS:
         feature_vector.append(label)
 
         feature_vectors.append(feature_vector)
-
 
     # creating data frame and saving as .csv
     column_names = ['f#' + str(col_name) for col_name in range(len(feature_vector[:-1]))]

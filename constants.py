@@ -10,17 +10,17 @@ FEATURE_EXTRACTION_OPTIONS = {
     'zoning': {
         'descriptor': Zoning,
         'target_features_filename': 'zoning_features.csv',
-        'enabled': True
+        'enabled': False
     },
         'edge_maps': {
         'descriptor': EdgeMaps,
         'target_features_filename': 'edge_maps_features.csv',
-        'enabled': True
+        'enabled': False
     },
         'local_binary_pattern': {
         'descriptor': LocalBinaryPattern,
         'target_features_filename': 'local_binary_pattern.csv',
-        'enabled': True
+        'enabled': False
     },
         'zoning_chain_code': {
         'descriptor': ZoningChainCode,

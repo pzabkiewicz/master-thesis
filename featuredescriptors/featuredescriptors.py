@@ -1,14 +1,11 @@
 from abc import ABC, abstractmethod
-
-import cv2
-import numpy as np
-
-from math import sqrt, sin, cos
 from random import random
 
-from skimage.morphology import skeletonize, diamond
+import numpy as np
+from math import sqrt, sin, cos
 from skimage.feature import local_binary_pattern
 from skimage.filters import sobel_h, sobel_v, threshold_otsu
+from skimage.morphology import skeletonize
 
 CHAR_PIXEL_VALUE = 1
 BACKGROUND_VALUE = 0
@@ -51,9 +48,7 @@ class LocalBinaryPattern(FeatureDescriptor):
         self.radius = radius
 
     def preprocess(self, image):
-        self.image = cv2.erode(image[:, :], diamond(1), iterations=1)
-        structuring_element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
-        self.image = cv2.morphologyEx(self.image, cv2.MORPH_CLOSE, structuring_element)
+        self.image = image[:, :]
 
     def describe(self, eps=1e-7):
         self.image = local_binary_pattern(self.image, self.n_points,
@@ -92,7 +87,7 @@ class Zoning(FeatureDescriptor):
     def preprocess(self, image):
         thresh = threshold_otsu(image)
         img = image > thresh
-        self.image = skeletonize(img)
+        self.image = img[:, :]
 
     def describe(self):
         """ This method assumes square form of matrix
