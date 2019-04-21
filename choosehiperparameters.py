@@ -54,7 +54,7 @@ ZONING_CHAIN_CODE_FEATURES_FILEPATH = BASE_TARGET_FEATURES_DIRECTORY + \
 
 df = pd.read_csv(ZONING_CHAIN_CODE_FEATURES_FILEPATH)
 
-X = df.values[:, :-1]
+X = df.values[:, 1:-1]
 y = df.values[:, -1]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
