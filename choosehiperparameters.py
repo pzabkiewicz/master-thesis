@@ -7,9 +7,25 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 
 from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
+
+
+def to_param_names_for_pipeline(parameters):
+
+    if isinstance(parameters, dict):
+        parameters = [parameters]
+
+    new_params = []
+
+    for params_item in parameters:
+        new_params.append({'clf__' + k: params_item[k] for k in params_item})
+
+    return new_params
+
 
 PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
 
@@ -66,13 +82,18 @@ for classifier_name in CLASSIFIER_OPTIONS:
 
     classifier = CLASSIFIER_OPTIONS[classifier_name]['estimator']
 
+    pipe = Pipeline([['sc', StandardScaler()],
+                     ['clf', classifier]])
+    params = to_param_names_for_pipeline(CLASSIFIER_OPTIONS[classifier_name]['parameters'])
+
     start = time()
 
-    gs = GridSearchCV(estimator=classifier,
-                      param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
+    gs = GridSearchCV(estimator=pipe,
+                      param_grid=params,
                       scoring='accuracy',
                       cv=10,
-                      n_jobs=-1)
+                      n_jobs=-1,
+                      verbose=10)
 
     gs = gs.fit(X_train, y_train)
 
