@@ -14,19 +14,23 @@ from constants import FEATURE_EXTRACTION_OPTIONS
 PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
 
 CLASSIFIER_OPTIONS = {
-    'svm': {
-        'estimator': SVC(cache_size=7000, max_iter=1000, random_state=42),
-        'parameters': [
+    'svm_linear': {
+        'estimator': SVC(random_state=42),
+        'parameters':
             {
                 'kernel': ['linear'],
                 'C': PARAM_RANGE_SVM_KNN,
             },
+        'enabled': True
+    },
+    'svm_linear': {
+        'estimator': SVC(random_state=42),
+        'parameters':
             {
                 'kernel': ['rbf'],
                 'C': PARAM_RANGE_SVM_KNN,
                 'gamma': PARAM_RANGE_SVM_KNN
-            }
-        ],
+            },
         'enabled': True
     },
     'knn': {
@@ -72,7 +76,7 @@ for classifier_name in CLASSIFIER_OPTIONS:
                       param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
                       scoring='accuracy',
                       cv=10,
-                      n_jobs=3,
+                      n_jobs=-1,
                       verbose=10)
 
     gs = gs.fit(X_train, y_train)
