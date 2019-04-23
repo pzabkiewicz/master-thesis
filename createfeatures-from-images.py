@@ -5,7 +5,6 @@ from time import time
 
 import pandas as pd
 from skimage.io import imread
-from skimage.transform import resize
 
 from constants import BASE_IMAGES_DIRECTORY
 from constants import BASE_TARGET_FEATURES_DIRECTORY
@@ -20,7 +19,7 @@ CSV_FILE_PATH = 'data.csv'
 CHAR_DIRECTORIES = listdir(BASE_IMAGES_DIRECTORY)
 
 # number of instances of one class for feature extraction
-CLASS_NO = 500
+CLASS_NO = 2000
 
 chosen_char_file_paths = []
 

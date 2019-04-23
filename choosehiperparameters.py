@@ -14,19 +14,21 @@ from constants import FEATURE_EXTRACTION_OPTIONS
 PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
 
 CLASSIFIER_OPTIONS = {
-    'svm': {
-        'estimator': SVC(random_state=42),
-        'parameters': [
+    'svm_linear': {
+        'estimator': SVC(kernel='linear', random_state=42),
+        'parameters':
             {
-                'kernel': ['linear'],
                 'C': PARAM_RANGE_SVM_KNN,
             },
+        'enabled': True
+    },
+    'svm_rbf': {
+        'estimator': SVC(kernel='rbf', random_state=42),
+        'parameters':
             {
-                'kernel': ['rbf'],
                 'C': PARAM_RANGE_SVM_KNN,
                 'gamma': PARAM_RANGE_SVM_KNN
-            }
-        ],
+            },
         'enabled': True
     },
     'knn': {
@@ -42,7 +44,7 @@ CLASSIFIER_OPTIONS = {
         'estimator': MLPClassifier(random_state=42),
         'parameters':
             {
-                 'hidden_layer_sizes': [(i*50,) for i in range(1,11)],
+                 'hidden_layer_sizes': [(i*50,) for i in range(1, 11)],
                  'activation': ['logistic', 'tanh', 'relu']
             },
         'enabled': False
@@ -72,7 +74,7 @@ for classifier_name in CLASSIFIER_OPTIONS:
                       param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
                       scoring='accuracy',
                       cv=10,
-                      n_jobs=-1)
+                      n_jobs=5)
 
     gs = gs.fit(X_train, y_train)
 
