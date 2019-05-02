@@ -1,17 +1,14 @@
+import csv
+
 from time import time
 
-import csv
-import string
-
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 from skimage.transform import resize
 
+from constants import ALPHABET
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
-
-ALPHABET = list(string.ascii_uppercase)
 
 CHARS_LABELS_MAP = {k: v for k, v in enumerate(ALPHABET)}
 

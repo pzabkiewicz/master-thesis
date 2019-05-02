@@ -1,17 +1,16 @@
-import string
 from os import listdir
 from random import random
 from time import time
 
 import pandas as pd
+
 from skimage.io import imread
 from skimage.transform import resize
 
+from constants import ALPHABET
 from constants import BASE_IMAGES_DIRECTORY
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
-
-ALPHABET = list(string.ascii_uppercase)
 
 CHARS_LABELS_MAP = {k: v for k, v in enumerate(ALPHABET)}
 

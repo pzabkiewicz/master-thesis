@@ -1,7 +1,11 @@
+import string
+
 from featuredescriptors.featuredescriptors import ZoningChainCode
 from featuredescriptors.featuredescriptors import LocalBinaryPattern
 from featuredescriptors.featuredescriptors import EdgeMaps
 from featuredescriptors.featuredescriptors import Zoning
+
+ALPHABET = list(string.ascii_uppercase)
 
 BASE_IMAGES_DIRECTORY = 'images/'
 BASE_TARGET_FEATURES_DIRECTORY = 'features_csv/'
