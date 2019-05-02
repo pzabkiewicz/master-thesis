@@ -33,35 +33,34 @@ classifiers = {
     }
 }
 
+# loop through 'feature extraction methods' (rather through data sets with feature vectors)
+for method, options in FEATURE_EXTRACTION_OPTIONS.items():
 
-for clf in classifiers:
-
-    clf_options = classifiers[clf]
-
-    if not clf_options['enabled']:
+    if not options['enabled']:
         continue
 
-    # loop through 'feature extraction methods' (rather through data sets with feature vectors)
-    for method, options in FEATURE_EXTRACTION_OPTIONS.items():
+    fid = options['target_features_filename']
+    filepath = BASE_TARGET_FEATURES_DIRECTORY + fid
 
-        if not options['enabled']:
-            continue
+    df = pd.read_csv(filepath)
 
-        fid = options['target_features_filename']
-        filepath = BASE_TARGET_FEATURES_DIRECTORY + fid
+    X = df.values[:, 1:-1]
+    y = df.values[:, -1]
+    y = np.array([labels_conversion[label] for label in y])
 
-        df = pd.read_csv(filepath)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-        X = df.values[:, 1:-1]
-        y = df.values[:, -1]
-        y = np.array([labels_conversion[label] for label in y])
+    for clf in classifiers:
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
+        clf_options = classifiers[clf]
         classifier = clf_options['clf']
+
+        if not clf_options['enabled']:
+            continue
 
         print('Fitting using', clf, 'on train data extracted with', method)
         classifier.fit(X_train, y_train)
+
         print('Prediction on test data...')
         y_pred = classifier.predict(X_test)
 
@@ -74,5 +73,5 @@ for clf in classifiers:
         title = clf + ' / ' + method
         plot_confusion_matrix(y_test, y_pred, np.array(ALPHABET), normalize=True, title=title)
 
-        target_path = 'mainexperiment-results/' + method + '.eps'
+        target_path = 'mainexperiment-results/' + clf + '-' + method + '.eps'
         plt.savefig(target_path, format='eps', dpi=1000)
