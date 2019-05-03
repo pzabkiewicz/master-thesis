@@ -10,11 +10,14 @@ from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
 from constants import CLASSIFIERS
 
-results = None
+picklepath = 'mainexperiment-results/results.pickle'
 
-if os.path.isfile('mainexperiment-results/results.pickle'):
-    with open('results.pickle', 'rb') as f:
+try:
+    with open(picklepath, 'rb') as f:
         results = pickle.load(f)
+except EOFError:
+    results = None
+
 if not results:
     results = {
         'svm': {
@@ -70,5 +73,5 @@ for method, options in FEATURE_EXTRACTION_OPTIONS.items():
 
             print('FOLD #%d: Classification accuracy using %s: %.2f' % (k, clf, score * 100))
 
-    with open('results.pickle', 'wb') as f:
+    with open(picklepath, 'wb') as f:
         pickle.dump(results, f)
