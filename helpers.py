@@ -41,21 +41,20 @@ def plot_confusion_matrix(y_true, y_pred, classes,
            # ... and label them with the respective list entries
            xticklabels=classes, yticklabels=classes,
            title=title,
-           ylabel='Przewidziana etykieta',
-           xlabel='Rzeczywista etykieta')
+           ylabel='Rzeczywista etykieta',
+           xlabel='Przewidziana etykieta')
 
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
 
-    plt.rcParams.update({'font.size': 4})
     # Loop over data dimensions and create text annotations.
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
             ax.text(j, i, format(cm[i, j], fmt),
-                    ha="center", va="center",
+                    ha="center", va="center", fontsize=4,
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     return ax
