@@ -23,7 +23,7 @@ if not results:
         'svm': {
             'zoning': [],
             'edge_maps': [],
-            'local_binary_pattern:': [],
+            'local_binary_pattern': [],
             'zoning_chain_code': []
         },
         'knn': {
