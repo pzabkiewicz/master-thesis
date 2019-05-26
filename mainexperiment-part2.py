@@ -1,14 +1,20 @@
-import os
 import pickle
 
 import pandas as pd
 
-from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import train_test_split
 
 from constants import BASE_TARGET_FEATURES_DIRECTORY
-from constants import FEATURE_EXTRACTION_OPTIONS
 from constants import CLASSIFIERS
+from constants import FEATURE_EXTRACTION_OPTIONS
+
+""" This script performs 10 cross validation for each combination
+of feature extraction method and classifier and saves the results
+in form of accuracy in a pickle. The output file will be then used 
+in jupyter-notebook to perform statistical analysis with null 
+hypothesis that there's no significant difference in classification
+accuracy between different extraction method within a specific classifier. """
 
 picklepath = 'mainexperiment-results/results.pickle'
 

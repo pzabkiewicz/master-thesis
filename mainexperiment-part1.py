@@ -13,8 +13,9 @@ from constants import CLASSIFIERS
 
 from helpers import plot_confusion_matrix
 
-""" This script is used for generating confusion matrix for
-all combinations of each classifier with each feature extraction method """
+""" This script is used for generating confusion matrices for
+all combinations of each classifier with each feature extraction method. 
+The confusion matrices will be saved as .eps files. """
 
 labels_conversion = {k: v for v, k in enumerate(ALPHABET)}
 
