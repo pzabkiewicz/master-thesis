@@ -10,6 +10,11 @@ from constants import BASE_IMAGES_DIRECTORY
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
 
+
+""" Prototype script that was finally not used in this thesis. 
+To be sure that everything works OK, use createfeatures-from-csv.py 
+or createfeatures-from-images.py """
+
 images_subdirectories = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
                          'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 filepaths = []

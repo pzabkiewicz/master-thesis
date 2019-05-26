@@ -5,6 +5,10 @@ from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
 
+""" This script was copied from the following website: 
+https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
+[last access: 26.05.2019]. """
+
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,

@@ -11,6 +11,11 @@ from constants import BASE_IMAGES_DIRECTORY
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
 
+""" This script was finally used to get features from images. 
+The images was retrieved from a .csv file downloaded from 
+https://www.kaggle.com/sachinpatel21/az-handwritten-alphabetsin-csv-format [last access: 10.04.2019]. """
+
+
 CHARS_LABELS_MAP = {k: v for k, v in enumerate(ALPHABET)}
 
 CSV_FILE_PATH = 'data.csv'

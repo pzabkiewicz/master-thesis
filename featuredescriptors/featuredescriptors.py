@@ -90,15 +90,6 @@ class Zoning(FeatureDescriptor):
         self.image = img[:, :]
 
     def describe(self):
-        """ This method assumes square form of matrix
-        and a constant number of pixels in zone which is 25 pixels.
-
-        Following this assumption the image can have size e.g. 20x20 px
-        and 16 zones (4x4) or 40x40 px and 64 zones (8x8).
-
-        Then each subzone has shape 1x5 px.
-        """
-
         side_size = int(self.image.shape[0] // self.side_zone_number)
         zone_avgs = []
 
@@ -132,7 +123,7 @@ class EdgeMaps(FeatureDescriptor):
     4 edge maps and preprocessed image. To get edge maps (horizontal,
     vertical, at angle of 45 and -45 degrees) Sobel operator is used.
     Every projection is split into a specified number of zones and
-    in every zone is percentage of char pixels calculated. The percentage values
+    in every zone percentage of char pixels is calculated. The percentage values
     are features for classifier.
 
     References:
@@ -197,10 +188,17 @@ class EdgeMaps(FeatureDescriptor):
 class ZoningChainCode(FeatureDescriptor):
     """ This class implements a descriptor that connects two other methods:
     Zoning and Freeman Chain Code. While Freeman Chain Code (FCC) is created,
-    cross of zone boundary is tracked. Then the FCC that was created in
+    crossing of zone boundary is tracked. Then the FCC that was created in
     a specified zone, is assigned to the zone.
 
-    ... (mapping FRR directions into my directions and dominanta)
+    Next FCC will be translated into simpler code according to SENSE2DIR dictionary
+    - 8 senses will be converted into 4 directions.
+
+    Next value of feature vector is result of analysis of chain of 4 directions in zone.
+    1) no chain code in zone - 4 will be assigned as feature
+    2) the most frequent value from chain code will be assigned as feature (dominant)
+    3) if there are more than one most frequent number in chain code then te value will
+    be chosen randomly from this dominant values.
 
     References:
 

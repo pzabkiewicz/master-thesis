@@ -11,6 +11,10 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from constants import BASE_TARGET_FEATURES_DIRECTORY
 from constants import FEATURE_EXTRACTION_OPTIONS
 
+""" This script performs grid search to find parameters of best classifier. 
+These parameters will be then used in main experiments.  """
+
+
 PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
 
 CLASSIFIER_OPTIONS = {
@@ -36,7 +40,7 @@ CLASSIFIER_OPTIONS = {
                 'n_neighbors': [3, 4, 5],
                 'metric': ['euclidean', 'manhattan', 'chebyshev'],
             },
-        'enabled': False
+        'enabled': True
     },
     'mlp': {
         'estimator': MLPClassifier(random_state=42),
@@ -45,7 +49,7 @@ CLASSIFIER_OPTIONS = {
                  'hidden_layer_sizes': [(i*50,) for i in range(1, 11)],
                  'activation': ['logistic', 'tanh', 'relu']
             },
-        'enabled': False
+        'enabled': True
     }
 }
 
@@ -80,6 +84,6 @@ for classifier_name in CLASSIFIER_OPTIONS:
     end = time()
 
     print(5 * '#' + classifier_name.upper() + 5 * '#', end='\n')
-    print('Sredni wynik z 10-krotnej walidacji krzyzowej: ', gs.best_score_)
-    print('Parametry najlepszego klasyfikatora: ', gs.best_params_, end='\n')
+    print('Mean accuracy of best classifier: ', gs.best_score_)
+    print('Parameters of best classifier: ', gs.best_params_, end='\n')
     print('GridSearch occupied: ', end - start, end='\n')
