@@ -15,7 +15,7 @@ PARAM_RANGE_SVM_KNN = [0.0001 * 10**i for i in range(9)]
 
 CLASSIFIER_OPTIONS = {
     'svm': {
-        'estimator': SVC(random_state=42),
+        'estimator': SVC(cache_size=7000, max_iter=1000, random_state=42),
         'parameters': [
             {
                 'kernel': ['linear'],
@@ -42,7 +42,7 @@ CLASSIFIER_OPTIONS = {
         'estimator': MLPClassifier(random_state=42),
         'parameters':
             {
-                 'hidden_layer_sizes': [(i*50,) for i in range(1,11)],
+                 'hidden_layer_sizes': [(i*50,) for i in range(1, 11)],
                  'activation': ['logistic', 'tanh', 'relu']
             },
         'enabled': False
@@ -72,7 +72,8 @@ for classifier_name in CLASSIFIER_OPTIONS:
                       param_grid=CLASSIFIER_OPTIONS[classifier_name]['parameters'],
                       scoring='accuracy',
                       cv=10,
-                      n_jobs=-1)
+                      n_jobs=3,
+                      verbose=10)
 
     gs = gs.fit(X_train, y_train)
 
