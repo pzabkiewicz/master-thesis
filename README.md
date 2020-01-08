@@ -1,6 +1,6 @@
 This code was written for making study on following subject: _Feature extraction for computer aided recognition of structurized handwritting_.
 
-Within the scope of this master thesis a feature extraction method was proposed. This method makes use of two other algorithms: _Freeman chain code_ and one of modification of _zoning_. This method was compared with 3 others algorithms and namely: _Local Binary Pattern_, _Zoning_, _Edge Maps_ (references are cited in code).
+Within the scope of this master thesis a feature extraction method was proposed. This method makes use of two other algorithms: _Freeman chain code_ and one of the modifications of _zoning_. This method was compared with 3 others algorithms and namely: _Local Binary Pattern_, _Zoning_, _Edge Maps_ (references are cited in code).
 
 Following steps were conducted within the master thesis:
 
